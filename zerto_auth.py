@@ -11,6 +11,7 @@
 #importing HTTPBasicAuth library for ZVM basic authentication
 import requests
 from requests.auth import HTTPBasicAuth
+import zvm
 
 #Declaring Environment variables
 zvm_ip = ""
@@ -42,8 +43,10 @@ def login(session_url, zvm_user, zvm_password):
 
 
 test = login(session, zvm_u, zvm_p)
-test2 = login(session, zvm_u, zvm_p)
-test3 = login(session, zvm_u, zvm_p)
+test2 = zvm.getAllVolumeInfo(test['headers'],test['base_url'])
+
+#test2 = login(session, zvm_u, zvm_p)
+#test3 = login(session, zvm_u, zvm_p)
 
 
 # TODO: Return entire header as opposed to just key
