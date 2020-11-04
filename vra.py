@@ -40,16 +40,26 @@ class vra():
     -------
     infoAllVRAs()
         Get info on all VRAs.
+    upgradeGroupVRAs()
+        Upgrade a group of VRAs which are specified in the vraid body
+    upgradeVRA()
+        Upgrade individual VRA
+    installVRA()
+        Install individual VRA
+    editVRA()
+        Edit individual VRA
+    delVRA()
+        Delete individual VRA
     """
     endPoint = '/vras'
-    #This is a class for VRAs 
+    
     def __init__(self, zvmurl, headerwithkey, datastoreid=None, groupname=None, hostid=None, hostrootpassword=None, 
-       ram=None, cpu=None, networkid=None, publickey=None, gateway=None, subnet=None, ipaddr=None,ipconfig=None):
+       ram=None, cpu=None, networkid=None, publickey=None, gateway=None, subnet=None, ipaddr=None,ipconfig=None, vraid=None):
        self.zvmurl = zvmurl
        self.headerwithkey = headerwithkey
        self.datastoreid = datastoreid
        self.groupname = groupname
-       self.host = hostid
+       self.hostid = hostid
        self.hostpass = hostrootpassword
        self.ram = ram
        self.cpu = cpu 
@@ -59,6 +69,7 @@ class vra():
        self.subnet = subnet
        self.ipaddr = ipaddr
        self.ipconfig = ipconfig
+       self.vraid = vraid
        
        
     def infoAllVRAs(self):
@@ -66,6 +77,65 @@ class vra():
         print(response)
         return response
        
+    def upgradeGroupVRAs(self):
+        response = requests.post(self.zvmurl + self.endPoint + "/upgrade", headers=self.headerwithkey, data=self.vraid, verify=False)
+        print(response)
+        return response
+    # TODO: Determine logic on how single VRA ID is passed vs multi VRA for upgrade  
+    def upgradeVRA(self):
+        response = requests.post(self.zvmurl + self.endPoint +"/" + self.vraid + "/upgrade", headers=self.headerwithkey, verify=False)
+        print(response)
+        return response
+
+    def installVRA(self):
+        #Build VRA dict containing morefs and static IPs
+        # TODO: convert this manual dict into something more scalable
+        vra_dict = {
+            "DatastoreIdentifier":  self.datastoreid,
+            "GroupName": self.groupname,
+            "HostIdentifier":  self.hostid,
+            "HostRootPassword": None,
+            "MemoryInGb":  self.ram,
+            "NumOfCpus": self.cpu,
+            "NetworkIdentifier":  self.networkid,
+            "UsePublicKeyInsteadOfCredentials": self.hostkey,
+            "VraNetworkDataApi": {
+                                   "DefaultGateway":  self.gateway,
+                                    "SubnetMask":  self.subnet,
+                                    "VraIPAddress":  self.ipaddr,
+                                    "VraIPConfigurationTypeApi":  self.ipconfig
+                                }
+        }
+        vra_json = json.dumps(vra_dict)
+        response = requests.post(self.zvmurl + self.endPoint, headers=self.headerwithkey, data=vra_json, verify=False)
+        print(response)
+        return response
+
+    def editVRA(self):
+        # TODO: convert this manual dict into something more scalable
+        vra_dict = {
+            "DatastoreIdentifier":  self.datastoreid,
+            "GroupName": self.groupname,
+            "HostIdentifier":  self.hostid,
+            "HostRootPassword": None,
+            "MemoryInGb":  self.ram,
+            "NumOfCpus": self.cpu,
+            "NetworkIdentifier":  self.networkid,
+            "UsePublicKeyInsteadOfCredentials": self.hostkey,
+            "VraNetworkDataApi": {
+                                    "DefaultGateway":  self.gateway,
+                                    "SubnetMask":  self.subnet,
+                                    "VraIPAddress":  self.ipaddr,
+                                    "VraIPConfigurationTypeApi":  self.ipconfig
+                                }
+            }
+        vra_json = json.dumps(vra_dict)
+        response = requests.put(self.zvmurl + self.endPoint +"/" + self.vraid, headers=self.headerwithkey, data=vra_json, verify=False)
+        print(response)
     
+    def delVRA(self):
+        response = requests.delete(self.zvmurl + self.endPoint +"/" + self.vraid, headers=self.headerwithkey, verify=False)
+        print(response)
+        return response
 
 
