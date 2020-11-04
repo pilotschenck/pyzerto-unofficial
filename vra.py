@@ -43,7 +43,7 @@ class vra():
     """
     endPoint = '/vras'
     #This is a class for VRAs 
-   def __init__(self, zvmurl, headerwithkey, datastoreid=None, groupname=None, hostid=None, hostrootpassword=None, 
+    def __init__(self, zvmurl, headerwithkey, datastoreid=None, groupname=None, hostid=None, hostrootpassword=None, 
        ram=None, cpu=None, networkid=None, publickey=None, gateway=None, subnet=None, ipaddr=None,ipconfig=None):
        self.zvmurl = zvmurl
        self.headerwithkey = headerwithkey
