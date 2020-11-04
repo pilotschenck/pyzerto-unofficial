@@ -42,8 +42,11 @@ def login(session_url, zvm_user, zvm_password):
       print("HTTP %i - %s, Message %s" % (response.status_code, response.reason, response.text))
 
 
+
 test = login(session, zvm_u, zvm_p)
-test2 = zvm.getAllVolumeInfo(test['headers'],test['base_url'])
+test2 = zvm.peersites('https://192.168.1.42:9669/v1', test['headers'])
+#test2 = zvm.getAllVolumeInfo(test['headers'],test['base_url'])
+#test3 = zvm.getLicenseNew(test['headers'],test['base_url'])
 
 #test2 = login(session, zvm_u, zvm_p)
 #test3 = login(session, zvm_u, zvm_p)

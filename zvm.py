@@ -183,6 +183,44 @@ class localsite():
         print(response)
         return response
 
+class peersites():
+    endPoint = '/peersites'
+
+    def __init__(self, zvmurl, headerwithkey, siteidentifier=None):
+        self.zvmurl = zvmurl
+        self.headerwithkey = headerwithkey
+        self.siteidentifier = siteidentifier
+
+    def getListOfPeerSites(self):
+        response = requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
+        print(response.text)
+        print(response)
+        return response
+
+    def getSinglePeerSites(self, siteidentifier):
+        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier, headers=self.headerwithkey, verify=False)
+        print(response.text)
+        print(response)
+        return response
+
+    def getStatusOfPeerSites(self):
+        response = requests.get(self.zvmurl + self.endPoint + '/pairingstatuses', headers=self.headerwithkey, verify=False)
+        print(response.text)
+        print(response)
+        return response
+
+    def generatePeeringToken(self):
+        response = requests.post(self.zvmurl + self.endPoint + '/generatetoken', headers=self.headerwithkey, verify=False)
+        print(response.text)
+        print(response)
+        return response
+
+    def pairToSite(self):
+        # TODO: Finish this module
+        response = requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
+        print(response.text)
+        print(response)
+        return response
 
 '''
 class volumes():
