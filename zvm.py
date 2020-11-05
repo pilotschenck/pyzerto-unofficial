@@ -137,22 +137,24 @@ class license():
 
     endPoint = '/license'
 
-    #def __init__(self, zvmurl, headerwithkey, licensekey=None):
-    #    self.zvmurl = testUrl
-    #    self.headerwithkey = testHeaders
-    #    self.licensekey = licensekey
+    def __init__(self, licensekey=None):
+        self.licensekey = licensekey
 
     def addLicense(self):
 
-        response = requests.put(self.zvmurl + self.endPoint, data=json.dumps({"LicenseKey": self.licensekey}), headers=self.headerwithkey, verify=False)
+        response = requests.put(testUrl+license.endPoint, data=json.dumps({"LicenseKey": self.licensekey}), headers=testHeaders, verify=False)
+        print(response.text)
         print(response)
+        return response
 
-    def delLicense(self, headers=None):
+    def delLicense(self):
 
-        response = requests.delete(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
+        response = requests.delete(testUrl+license.endPoint, headers=testHeaders, verify=False)
+        print(response.text)
         print(response)
+        return response
 
-    def getLicense():
+    def getLicense(self):
 
         response = requests.get(testUrl+license.endPoint, headers=testHeaders, verify=False)
         print(response.text)
