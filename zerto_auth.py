@@ -12,11 +12,9 @@
 import requests
 from requests.auth import HTTPBasicAuth
 import zvm
+from secrets import zvm_ip, zvm_u, zvm_p
 
 #Declaring Environment variables
-zvm_ip = ""
-zvm_u = ""
-zvm_p = ""
 base_url = "https://"+zvm_ip+":9669/v1"
 session = base_url+"/session/add"
 
@@ -44,7 +42,11 @@ def login(session_url, zvm_user, zvm_password):
 
 
 test = login(session, zvm_u, zvm_p)
-test2 = zvm.peersites('https://192.168.1.42:9669/v1', test['headers'])
+
+testUrl = 'https://192.168.1.42:9669/v1'
+testHeaders = test['headers']
+
+#test2 = zvm.peersites('https://192.168.1.42:9669/v1', test['headers'])
 #test2 = zvm.getAllVolumeInfo(test['headers'],test['base_url'])
 #test3 = zvm.getLicenseNew(test['headers'],test['base_url'])
 

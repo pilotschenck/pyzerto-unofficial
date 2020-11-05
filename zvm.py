@@ -1,6 +1,7 @@
 import json
 import requests
 import crudFunctions
+from zerto_auth import testUrl, testHeaders
 
 class alerts():
     """The alerts API returns information about alerts and dismisses or undismisses a specific alert.
@@ -133,29 +134,31 @@ class events():
         return response
 
 class license():
+
     endPoint = '/license'
 
-    def __init__(self, zvmurl, headerwithkey, licensekey=None):
-        self.zvmurl = zvmurl
-        self.headerwithkey = headerwithkey
-        self.licensekey = licensekey
+    #def __init__(self, zvmurl, headerwithkey, licensekey=None):
+    #    self.zvmurl = testUrl
+    #    self.headerwithkey = testHeaders
+    #    self.licensekey = licensekey
 
     def addLicense(self):
 
         response = requests.put(self.zvmurl + self.endPoint, data=json.dumps({"LicenseKey": self.licensekey}), headers=self.headerwithkey, verify=False)
         print(response)
 
-    def delLicense(self):
+    def delLicense(self, headers=None):
 
         response = requests.delete(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
         print(response)
 
-    def getLicense(self):
+    def getLicense():
 
-        response = requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
+        response = requests.get(testUrl+license.endPoint, headers=testHeaders, verify=False)
         print(response.text)
         print(response)
         return response
+
 
 class localsite():
     endPoint = '/localsite'
