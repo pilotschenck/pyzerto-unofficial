@@ -1,7 +1,6 @@
 import json 
 import requests
 
-
 class vra():
     """The VRAs API returns information about VRAs, allows installation of a single VRA or VRA group,
     uninstallation of a VRA, or editing of a VRA
@@ -53,24 +52,9 @@ class vra():
     """
     endPoint = '/vras'
     
-    def __init__(self, zvmurl, headerwithkey, datastoreid=None, groupname=None, hostid=None, hostrootpassword=None, 
-       ram=None, cpu=None, networkid=None, publickey=None, gateway=None, subnet=None, ipaddr=None,ipconfig=None, vraid=None):
+    def __init__(self, zvmurl, headerwithkey):
        self.zvmurl = zvmurl
-       self.headerwithkey = headerwithkey
-       self.datastoreid = datastoreid
-       self.groupname = groupname
-       self.hostid = hostid
-       self.hostpass = hostrootpassword
-       self.ram = ram
-       self.cpu = cpu 
-       self.networkid = networkid
-       self.hostkey = publickey
-       self.gateway = gateway 
-       self.subnet = subnet
-       self.ipaddr = ipaddr
-       self.ipconfig = ipconfig
-       self.vraid = vraid
-       
+       self.headerwithkey = headerwithkey 
        
     def infoAllVRAs(self):
         response = requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
@@ -87,49 +71,17 @@ class vra():
         print(response)
         return response
 
-    def installVRA(self):
+    def installVRA(self, vra_dict):
         #Build VRA dict containing morefs and static IPs
         # TODO: convert this manual dict into something more scalable
-        vra_dict = {
-            "DatastoreIdentifier":  self.datastoreid,
-            "GroupName": self.groupname,
-            "HostIdentifier":  self.hostid,
-            "HostRootPassword": None,
-            "MemoryInGb":  self.ram,
-            "NumOfCpus": self.cpu,
-            "NetworkIdentifier":  self.networkid,
-            "UsePublicKeyInsteadOfCredentials": self.hostkey,
-            "VraNetworkDataApi": {
-                                   "DefaultGateway":  self.gateway,
-                                    "SubnetMask":  self.subnet,
-                                    "VraIPAddress":  self.ipaddr,
-                                    "VraIPConfigurationTypeApi":  self.ipconfig
-                                }
-        }
-        vra_json = json.dumps(vra_dict)
-        response = requests.post(self.zvmurl + self.endPoint, headers=self.headerwithkey, data=vra_json, verify=False)
+
+        #vra_json = json.dumps(vra_dict)
+        response = requests.post(self.zvmurl + self.endPoint, headers=self.headerwithkey, data=vra_dict, verify=False)
         print(response)
         return response
 
-    def editVRA(self):
+    def editVRA(self, vra_dict):
         # TODO: convert this manual dict into something more scalable
-        vra_dict = {
-            "DatastoreIdentifier":  self.datastoreid,
-            "GroupName": self.groupname,
-            "HostIdentifier":  self.hostid,
-            "HostRootPassword": None,
-            "MemoryInGb":  self.ram,
-            "NumOfCpus": self.cpu,
-            "NetworkIdentifier":  self.networkid,
-            "UsePublicKeyInsteadOfCredentials": self.hostkey,
-            "VraNetworkDataApi": {
-                                    "DefaultGateway":  self.gateway,
-                                    "SubnetMask":  self.subnet,
-                                    "VraIPAddress":  self.ipaddr,
-                                    "VraIPConfigurationTypeApi":  self.ipconfig
-                                }
-            }
-        vra_json = json.dumps(vra_dict)
         response = requests.put(self.zvmurl + self.endPoint +"/" + self.vraid, headers=self.headerwithkey, data=vra_json, verify=False)
         print(response)
     
