@@ -66,8 +66,8 @@ class vra():
         print(response)
         return response
     # TODO: Determine logic on how single VRA ID is passed vs multi VRA for upgrade  
-    def upgradeVRA(self):
-        response = requests.post(self.zvmurl + self.endPoint +"/" + self.vraid + "/upgrade", headers=self.headerwithkey, verify=False)
+    def upgradeVRA(self, vra_id):
+        response = requests.post(self.zvmurl + self.endPoint +"/" + vra_id + "/upgrade", headers=self.headerwithkey, verify=False)
         print(response)
         return response
 
