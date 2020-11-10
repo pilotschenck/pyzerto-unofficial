@@ -1,7 +1,7 @@
 import json
 import requests
 import crudFunctions
-from zerto_auth import testUrl, testHeaders
+
 
 class vpgs():
     endPoint = '/vpgs'
@@ -181,8 +181,8 @@ class vpgs():
         print(response)
         return response
 
-    def deleteVpg(self, vpgid):
-        response = requests.delete(self.zvmurl + self.endPoint + '/' + vpgid, headers=self.headerwithkey, verify=False)
+    def deleteVpg(self, vpgid, body):
+        response = requests.delete(self.zvmurl + self.endPoint + '/' + vpgid, data=body, headers=self.headerwithkey, verify=False)
         print(response.text)
         print(response)
         return response
@@ -295,6 +295,7 @@ class vpgSettings():
         return response
 
     def getNICSettingsForSingleVmInVpg(self, vpgid, vmid, nicid):
+
         response = requests.get(self.zvmurl + self.endPoint + '/' + vpgid + '/vms/' + vmid + '/nics/' + nicid,
                                 headers=self.headerwithkey, verify=False)
         print(response.text)
@@ -315,8 +316,9 @@ class vpgSettings():
         print(response)
         return response
 
-    def createNewVpgSettingsObject(self, body):
-        response = requests.post(self.zvmurl + self.endPoint, body = body, headers=self.headerwithkey, verify=False)
+    def createNewVpgSettingsObject(self, argbody):
+
+        response = requests.post(self.zvmurl + self.endPoint, data=argbody, headers=self.headerwithkey, verify=False)
         print(response.text)
         print(response)
         return response
@@ -327,8 +329,8 @@ class vpgSettings():
         print(response)
         return response
 
-    def commitSettingsObject(self, vpgid, body):
-        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/commit', body=body, headers=self.headerwithkey, verify=False)
+    def commitSettingsObject(self, vpgid):
+        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/commit', headers=self.headerwithkey, verify=False)
         print(response.text)
         print(response)
         return response
@@ -339,8 +341,8 @@ class vpgSettings():
         print(response)
         return response
 
-    def editVpgSettingsObject(self, vpgid, body):
-        response = requests.put(self.zvmurl + self.endPoint + '/' + vpgid, body=body, headers=self.headerwithkey, verify=False)
+    def editVpgSettingsObject(self, vpgid, argbody):
+        response = requests.put(self.zvmurl + self.endPoint + '/' + vpgid, data=argbody, headers=self.headerwithkey, verify=False)
         print(response.text)
         print(response)
         return response
