@@ -9,10 +9,14 @@
 
 #importing request, json
 #importing HTTPBasicAuth library for ZVM basic authentication
-import requests
+import requests, urllib3
 from requests.auth import HTTPBasicAuth
-import zvm
+import json
+import zvm, vpg
 from secrets import zvm_ip, zvm_u, zvm_p
+import vmware.vapi.vsphere.client
+
+
 
 #Declaring Environment variables
 base_url = "https://"+zvm_ip+":9669/v1"
@@ -40,11 +44,54 @@ def login(session_url, zvm_user, zvm_password):
       print("HTTP %i - %s, Message %s" % (response.status_code, response.reason, response.text))
 
 
+def constructTagProtectedVpg(tagname):
+
+    protectedTag = tagname
+    vmlist = vsphere_client.vcenter.VM.list()
+    taglist = vsphere_client.tagging.Tag.list()
+    friendlyTagList = []
+    curatedTagList = []
+
+    for i in range(len(taglist)):
+        friendlyTagList.append(vsphere_client.tagging.Tag.get(taglist[i]))
+
+    for i in range(len(friendlyTagList)):
+        if friendlyTagList[i].name == protectedTag:
+            curatedTagList.append(friendlyTagList[i].id)
+
+    toBeProtectedVMs = vsphere_client.tagging.TagAssociation.list_attached_objects_on_tags(curatedTagList)
+
+    for i in range(len(toBeProtectedVMs[0].object_ids)):
+        print(toBeProtectedVMs[0].object_ids[i].id)
+        workingDict = {"VmIdentifier": str(vCenterUUID+'.' + toBeProtectedVMs[0].object_ids[i].id)}
+        workingOpen['Vms'].append(workingDict)
+
+    payload2 = json.dumps(workingOpen)
+    return v.createNewVpgSettingsObject(payload2).text
+
 
 test = login(session, zvm_u, zvm_p)
 
 testUrl = 'https://192.168.1.42:9669/v1'
 testHeaders = test['headers']
+
+wf = open('testVpg.json')
+payload = json.dumps(json.load(wf))
+
+wf2 = open('automatedVpgSkel.json')
+workingOpen = json.load(wf2)
+
+v = vpg.vpgSettings(testUrl, testHeaders)
+
+vCenterUUID = '0ad85e47-6b7d-4a95-a60d-be3d79308223'
+protectedTag = 'ZertoAutomation'
+session = requests.session()
+session.verify = False
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+vsphere_client = vmware.vapi.vsphere.client.create_vsphere_client(server="192.168.1.41", username=zvm_u, password=zvm_p, session=session)
+
+# newVpg = v.createNewVpgSettingsObject(payload)
+# v.commitSettingsObject(newVpg)
 
 #test2 = zvm.peersites('https://192.168.1.42:9669/v1', test['headers'])
 #test2 = zvm.getAllVolumeInfo(test['headers'],test['base_url'])
