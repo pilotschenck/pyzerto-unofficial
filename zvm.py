@@ -1,223 +1,111 @@
 import json
 import requests
-import crudFunctions
-from zerto_auth import testUrl, testHeaders
 
-class alerts():
-    """The alerts API returns information about alerts and dismisses or undismisses a specific alert.
+class zvm:
 
-    ...
-
-    Attributes
-    ----------
-    zvmurl : str
-        full path to the target Zerto Virtual Manager API endpoint, e.g. 'https://10.0.1.20:9669/v1'
-    headerwithkey : dict
-        python dict object with the required REST headers, including a valid session key.
-    alertid : str
-        optional attribute specifying a specific alertId. Default is None.
-
-    Methods
-    -------
-    infoAllAlerts()
-        Get info on all alerts.
-    """
-    endPoint = '/alerts'
-
-    def __init__(self, zvmurl, headerwithkey, alertid=None):
+    def __init__(self, zvmurl, headerwithkey):
         self.zvmurl = zvmurl
         self.headerwithkey = headerwithkey
-        self.alertid = alertid
 
-    def infoAllAlerts(self):
+    def infoAllAlerts(self, alertid=None):
 
-        response = requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
-        print(response)
-        return response
+        return requests.get(self.zvmurl + '/alerts', headers=self.headerwithkey, verify=False)
 
     def infoSingleAlert(self, alertid):
 
-        response = requests.get(self.zvmurl + self.endPoint + '/' + str(alertid), headers=self.headerwithkey, verify=False)
-        print(response)
-        return response
+        return requests.get(self.zvmurl + '/alerts/' + str(alertid), headers=self.headerwithkey, verify=False)
 
     def validAlertEntitiesValues(self):
 
-        response = requests.get(self.zvmurl + self.endPoint + '/entities', headers=self.headerwithkey, verify=False)
-        print(response)
-        return response
+        return requests.get(self.zvmurl + '/alerts/entities', headers=self.headerwithkey, verify=False)
 
     def validAlertHelpIdentifiersValues(self):
 
-        response = requests.get(self.zvmurl + self.endPoint + '/helpidentifiers', headers=self.headerwithkey, verify=False)
-        print(response)
-        return response
+        return requests.get(self.zvmurl + '/alerts/helpidentifiers', headers=self.headerwithkey, verify=False)
 
     def validAlertLevelValues(self):
 
-        response = requests.get(self.zvmurl + self.endPoint + '/levels', headers=self.headerwithkey, verify=False)
-        print(response)
-        return response
+        return requests.get(self.zvmurl + '/alerts/levels', headers=self.headerwithkey, verify=False)
 
     def dismissAlert(self, alertid):
 
-        response = requests.post(self.zvmurl + self.endPoint + '/levels' + str(alertid) + '/dismiss', headers=self.headerwithkey, verify=False)
-        print(response)
-        return response
+        return requests.post(self.zvmurl + '/alerts/levels' + str(alertid) + '/dismiss', headers=self.headerwithkey, verify=False)
 
     def undismissAlert(self, alertid):
 
-        response = requests.post(self.zvmurl + self.endPoint + '/levels' + str(alertid) + '/undismiss', headers=self.headerwithkey, verify=False)
-        print(response)
-        return response
-
-class datastores():
-    endPoint = '/datastores'
-
-    def __init__(self, zvmurl, headerwithkey, datastoreid=None):
-        self.zvmurl = zvmurl
-        self.headerwithkey = headerwithkey
-        self.datastoreid = datastoreid
+        return requests.post(self.zvmurl + '/alerts/levels' + str(alertid) + '/undismiss', headers=self.headerwithkey, verify=False)
 
     def datastoreInfo(self):
-        response = requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/datastores', headers=self.headerwithkey, verify=False)
 
     def datastoreSingleInfo(self, datastoreid):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + str(datastoreid), headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
 
-class events():
-    endPoint = '/events'
-
-    def __init__(self, zvmurl, headerwithkey, eventid=None):
-        self.zvmurl = zvmurl
-        self.headerwithkey = headerwithkey
-        self.datastoreid = eventid
+        return requests.get(self.zvmurl + '/datastores/' + str(datastoreid), headers=self.headerwithkey, verify=False)
 
     def allEvents(self):
-        response = requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        return requests.get(self.zvmurl + '/events', headers=self.headerwithkey, verify=False)
+
 
     #def filteredEvents(self):
 
         # TODO: Create filteredEvents function
 
     def getSingleEvent(self, eventid):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + str(eventid), headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/events/' + str(eventid), headers=self.headerwithkey, verify=False)
 
     def getValidEventCategories(self):
-        response = requests.get(self.zvmurl + self.endPoint + '/categories', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/events/categories', headers=self.headerwithkey, verify=False)
 
     def getValidEventEntities(self):
-        response = requests.get(self.zvmurl + self.endPoint + '/entities', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/events/entities', headers=self.headerwithkey, verify=False)
 
     def getValidEventTypes(self):
-        response = requests.get(self.zvmurl + self.endPoint + '/types', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
 
-class license():
-
-    endPoint = '/license'
-
-    def __init__(self, licensekey=None):
-        self.licensekey = licensekey
+        return requests.get(self.zvmurl + '/events/types', headers=self.headerwithkey, verify=False)
 
     def addLicense(self):
 
-        response = requests.put(testUrl+license.endPoint, data=json.dumps({"LicenseKey": self.licensekey}), headers=testHeaders, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        return requests.put(self.zvmurl + '/license', data=json.dumps({"LicenseKey": self.licensekey}), headers=self.headerwithkey, verify=False)
 
     def delLicense(self):
 
-        response = requests.delete(testUrl+license.endPoint, headers=testHeaders, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        return requests.delete(self.zvmurl + '/license', headers=self.headerwithkey, verify=False)
 
     def getLicense(self):
 
-        response = requests.get(testUrl+license.endPoint, headers=testHeaders, verify=False)
-        print(response.text)
-        print(response)
-        return response
-
-
-class localsite():
-    endPoint = '/localsite'
-
-    def __init__(self, zvmurl, headerwithkey):
-        self.zvmurl = zvmurl
-        self.headerwithkey = headerwithkey
+        return requests.get(self.zvmurl + '/license', headers=self.headerwithkey, verify=False)
 
     def getLocalSiteInfo(self):
-        response = requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/localsite', headers=self.headerwithkey, verify=False)
 
     def getValidPairingStatus(self):
-        response = requests.get(self.zvmurl + self.endPoint + '/pairingstatuses', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/localsite/pairingstatuses', headers=testHeaders, verify=False)
 
     def sendBillingData(self):
-        response = requests.post(self.zvmurl + self.endPoint + '/billing/sendUsage', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
 
-class peersites():
-    endPoint = '/peersites'
-
-    def __init__(self, zvmurl, headerwithkey, siteidentifier=None):
-        self.zvmurl = zvmurl
-        self.headerwithkey = headerwithkey
-        self.siteidentifier = siteidentifier
+        return requests.post(self.zvmurl +'/localsite/billing/sendUsage', headers=testHeaders, verify=False)
 
     def getListOfPeerSites(self):
-        response = requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/peersites', headers=self.headerwithkey, verify=False)
 
     def getSinglePeerSites(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/peersites/' + siteidentifier, headers=self.headerwithkey, verify=False)
 
     def getStatusOfPeerSites(self):
-        response = requests.get(self.zvmurl + self.endPoint + '/pairingstatuses', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/peersites/pairingstatuses', headers=self.headerwithkey, verify=False)
 
     def generatePeeringToken(self):
-        response = requests.post(self.zvmurl + self.endPoint + '/generatetoken', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.post(self.zvmurl + '/peersites/generatetoken', headers=self.headerwithkey, verify=False)
 
     def pairToSite(self):
         # TODO: Finish this module
@@ -226,179 +114,100 @@ class peersites():
         print(response)
         return response
 
-class reports():
-    endPoint = '/reports'
-
-    def __init__(self, zvmurl, headerwithkey):
-        self.zvmurl = zvmurl
-        self.headerwithkey = headerwithkey
-
     def getRecoveryReport(self):
-        response = requests.get(self.zvmurl + self.endPoint + '/recovery', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/reports/recovery', headers=self.headerwithkey, verify=False)
 
     def getResourcesReport(self):
-        response = requests.get(self.zvmurl + self.endPoint + '/resources', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
 
-class tasks():
-    endPoint = '/tasks'
-
-    def __init__(self, zvmurl, headerwithkey, taskidentifier=None):
-        self.zvmurl = zvmurl
-        self.headerwithkey = headerwithkey
-        self.taskidentifier = taskidentifier
+        return requests.get(self.zvmurl + '/reports/resources', headers=self.headerwithkey, verify=False)
 
     def getAllTasks(self):
-        response = requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/tasks', headers=self.headerwithkey, verify=False)
 
     def getSingleTask(self, taskidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + taskidentifier, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/tasks/' + taskidentifier, headers=self.headerwithkey, verify=False)
 
     def getValidTaskTypes(self):
-        response = requests.get(self.zvmurl + self.endPoint + '/types', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
 
-class virtualizationsites():
-    endPoint = '/virtualizationsites'
-
-    def __init__(self, zvmurl, headerwithkey, siteidentifier=None, hostidentifier=None):
-        self.zvmurl = zvmurl
-        self.headerwithkey = headerwithkey
-        self.siteidentifier = siteidentifier
-        self.hostidentifier = hostidentifier
+        return requests.get(self.zvmurl + '/tasks/types', headers=self.headerwithkey, verify=False)
 
     def getAllVirtualizationSites(self):
-        response = requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites', headers=self.headerwithkey, verify=False)
 
     def getSingleVirtualizationSite(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier, headers=self.headerwithkey, verify=False)
 
     def getStorageClustersAtSite(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/datastoreclusters', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/datastoreclusters', headers=self.headerwithkey, verify=False)
 
     def getStorageAtSite(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/datastores', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/datastores', headers=self.headerwithkey, verify=False)
 
     def getDevicesAtAllHosts(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/devices', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/devices', headers=self.headerwithkey, verify=False)
 
     def getDevicesAtSingleHost(self, siteidentifier, hostidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/devices?hostIdentifier=' + hostidentifier, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
-        # TODO: Verify this actually works, because the documentation contains what looks like a typo...
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/devices?hostIdentifier=' + hostidentifier, headers=self.headerwithkey, verify=False)
+
+        # TODO: Verify this actually works, because the documentation contains what looks like a typo... -- Update -- It works. Doc bug...
 
     def getFoldersAtSite(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/folders', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/folders', headers=self.headerwithkey, verify=False)
 
     def getHostClustersAtSite(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/hostclusters', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/hostclusters', headers=self.headerwithkey, verify=False)
 
     def getHostsAtSite(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/hosts', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/hosts', headers=self.headerwithkey, verify=False)
 
     def getSingleHostAtSite(self, siteidentifier, hostidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/hosts/' + hostidentifier, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/hosts/' + hostidentifier, headers=self.headerwithkey, verify=False)
 
     def getNetworksAtSite(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/networks', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/networks', headers=self.headerwithkey, verify=False)
 
     def getRepositoriesAtSite(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/repositories', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/repositories', headers=self.headerwithkey, verify=False)
 
     def getResourcePoolsAtSite(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/resourcepools', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/resourcepools', headers=self.headerwithkey, verify=False)
 
     def getUnprotectedVmsAtSite(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/vms', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/vms', headers=self.headerwithkey, verify=False)
 
     def getVmInstanceTypes(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/publicCloud/vmInstanceTypes', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/publicCloud/vmInstanceTypes', headers=self.headerwithkey, verify=False)
 
     def getAvailablevNets(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/publicCloud/virtualNetworks', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/publicCloud/virtualNetworks', headers=self.headerwithkey, verify=False)
 
     def getAvailableSubnets(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/publicCloud/subnets', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/publicCloud/subnets', headers=self.headerwithkey, verify=False)
 
     def getSecurityGroups(self, siteidentifier):
-        response = requests.get(self.zvmurl + self.endPoint + '/' + siteidentifier + '/publicCloud/securityGroups', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
 
-class volumes():
-    endPoint = '/volumes'
-
-    def __init__(self, zvmurl, headerwithkey):
-        self.zvmurl = zvmurl
-        self.headerwithkey = headerwithkey
+        return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/publicCloud/securityGroups', headers=self.headerwithkey, verify=False)
 
     def getAllVolumes(self):
 
-        response = requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        return requests.get(self.zvmurl + '/volumes', headers=self.headerwithkey, verify=False)
