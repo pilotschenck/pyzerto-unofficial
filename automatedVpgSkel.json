@@ -1,0 +1,67 @@
+{
+    "Basic":{
+        "JournalHistoryInHours":2,
+        "Name":"TestVpg",
+        "Priority":"Medium",
+        "ProtectedSiteIdentifier":"e0d14bf8-9889-4b2c-b9db-8d05b1954f73",
+        "RecoverySiteIdentifier":"e0d14bf8-9889-4b2c-b9db-8d05b1954f73",
+        "RpoInSeconds":600,
+        "ServiceProfileIdentifier": null,
+        "TestIntervalInMinutes":0,
+        "UseWanCompression":"True",
+        "ZorgIdentifier": null
+    },
+    "BootGroups":{
+        "BootGroups":[
+            {
+                "BootDelayInSeconds":0,
+                "BootGroupIdentifier":"00000000-0000-0000-0000-000000000000",
+                "Name":"Default"
+            }
+        ]
+    },
+    "Journal":{
+        "DatastoreIdentifier":"0ad85e47-6b7d-4a95-a60d-be3d79308223.datastore-10",
+        "Limitation":{
+            "HardLimitInMB":0,
+            "HardLimitInPercent":0,
+            "WarningThresholdInMB":0,
+            "WarningThresholdInPercent":0
+        }
+    },
+    "LongTermRetention":null,
+
+    "Networks":{
+        "Failover":{
+            "Hypervisor":{
+                "DefaultNetworkIdentifier":"0ad85e47-6b7d-4a95-a60d-be3d79308223.network-11"
+            }
+        },
+        "FailoverTest":{
+            "Hypervisor":{
+                "DefaultNetworkIdentifier":"0ad85e47-6b7d-4a95-a60d-be3d79308223.network-11"
+            }
+        }
+    },
+    "Recovery":{
+        "DefaultDatastoreClusterIdentifier":null,
+        "DefaultDatastoreIdentifier":"0ad85e47-6b7d-4a95-a60d-be3d79308223.datastore-10",
+        "DefaultFolderIdentifier":"0ad85e47-6b7d-4a95-a60d-be3d79308223.group-v3",
+        "DefaultHostClusterIdentifier":null,
+        "DefaultHostIdentifier":"0ad85e47-6b7d-4a95-a60d-be3d79308223.host-9",
+        "ResourcePoolIdentifier":null
+    },
+    "Scripting":{
+        "PostRecovery":{
+            "Command":null,
+            "Parameters":null,
+            "TimeoutInSeconds":0
+        },
+        "PreRecovery":{
+            "Command":null,
+            "Parameters":null,
+            "TimeoutInSeconds":0
+        }
+    },
+    "Vms":[]
+}
