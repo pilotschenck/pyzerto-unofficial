@@ -7,7 +7,7 @@ class vpgs():
     endPoint = '/vpgs'
 
     def __init__(self, zvmurl, headerwithkey, vpgid=None):
-        self.zvmurl = zvmurl
+        self.zvmurl = 'https://' + zvmurl + ':9669/v1'
         self.headerwithkey = headerwithkey
         self.vpgid = vpgid
 
@@ -191,7 +191,7 @@ class vpgSettings():
     endPoint = '/vpgSettings'
 
     def __init__(self, zvmurl, headerwithkey, vpgid=None, vmid=None, nicid=None, volumeid=None):
-        self.zvmurl = zvmurl
+        self.zvmurl = 'https://' + zvmurl + ':9669/v1'
         self.headerwithkey = headerwithkey
         self.vpgid = vpgid
         self.vmid = vmid

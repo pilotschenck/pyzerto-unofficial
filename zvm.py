@@ -4,7 +4,7 @@ import requests
 class zvm:
 
     def __init__(self, zvmurl, headerwithkey):
-        self.zvmurl = zvmurl
+        self.zvmurl = 'https://' + zvmurl + ':9669/v1'
         self.headerwithkey = headerwithkey
 
     def infoAllAlerts(self, alertid=None):
@@ -67,9 +67,9 @@ class zvm:
 
         return requests.get(self.zvmurl + '/events/types', headers=self.headerwithkey, verify=False)
 
-    def addLicense(self):
+    def addLicense(self, licensekey):
 
-        return requests.put(self.zvmurl + '/license', data=json.dumps({"LicenseKey": self.licensekey}), headers=self.headerwithkey, verify=False)
+        return requests.put(self.zvmurl + '/license', data=json.dumps({"LicenseKey": licensekey}), headers=self.headerwithkey, verify=False)
 
     def delLicense(self):
 

@@ -1,6 +1,6 @@
 import json 
 import requests
-
+#from zerto_auth import testUrl, testHeaders
 class vra():
     """The VRAs API returns information about VRAs, allows installation of a single VRA or VRA group,
     uninstallation of a VRA, or editing of a VRA
@@ -53,7 +53,7 @@ class vra():
     endPoint = '/vras'
     
     def __init__(self, zvmurl, headerwithkey):
-       self.zvmurl = zvmurl
+       self.zvmurl = 'https://' + zvmurl + ':9669/v1'
        self.headerwithkey = headerwithkey 
        
     def infoAllVRAs(self):
@@ -72,10 +72,6 @@ class vra():
         return response
 
     def installVRA(self, vra_dict):
-        #Build VRA dict containing morefs and static IPs
-        # TODO: convert this manual dict into something more scalable
-
-        #vra_json = json.dumps(vra_dict)
         response = requests.post(self.zvmurl + self.endPoint, headers=self.headerwithkey, data=vra_dict, verify=False)
         print(response)
         return response
@@ -85,8 +81,8 @@ class vra():
         response = requests.put(self.zvmurl + self.endPoint +"/" + self.vraid, headers=self.headerwithkey, data=vra_json, verify=False)
         print(response)
     
-    def delVRA(self):
-        response = requests.delete(self.zvmurl + self.endPoint +"/" + self.vraid, headers=self.headerwithkey, verify=False)
+    def delVRA(self, vraid):
+        response = requests.delete(self.zvmurl + self.endPoint +"/" + vraid, headers=self.headerwithkey, verify=False)
         print(response)
         return response
 

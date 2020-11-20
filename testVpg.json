@@ -3,8 +3,8 @@
         "JournalHistoryInHours":2,
         "Name":"TestVpg",
         "Priority":"Medium",
-        "ProtectedSiteIdentifier":"intentionallybroken",
-        "RecoverySiteIdentifier":"9bfc3492-be58-4d66-83c4-bba0b936866c",
+        "ProtectedSiteIdentifier":"a199d8c1-6314-441f-aa7e-db850016bd60",
+        "RecoverySiteIdentifier":"a199d8c1-6314-441f-aa7e-db850016bd60",
         "RpoInSeconds":600,
         "ServiceProfileIdentifier": null,
         "TestIntervalInMinutes":0,
@@ -63,5 +63,9 @@
             "TimeoutInSeconds":0
         }
     },
-    "Vms":[]
+    "Vms":[
+        {
+            "VmIdentifier":"0ad85e47-6b7d-4a95-a60d-be3d79308223.vm-14"
+        }
+    ]
 }
