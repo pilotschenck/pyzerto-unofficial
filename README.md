@@ -177,12 +177,12 @@ module as having to do with what's *inside* a VPG (with the exception of creatin
         "Vms":[]
     }
         
-        vpgSettingsId = v.createNewVpgSettingsObject(json.dumps(vpgPayload))
-        v.commitSettingsObject(vpgSettingsId)
+    vpgSettingsId = v.createNewVpgSettingsObject(json.dumps(vpgPayload))
+    v.commitSettingsObject(vpgSettingsId)
         
 ## Acknowledgements
 
 I would like to acknowledge several people for assisting, either directly or indirectly, in the creation of this
 library. Shaun Finn directly contributed to the zerto_auth and vra modules, and Wes Carroll provided insight and 
 assistance based on his experiences designing and developing his excellent PowerShell API wrapper. I would also like
-to acknowledge Jacob Lucas and Chris Pacejo in providing their insight as professional developers.
+to acknowledge Nick Costigan, Jacob Lucas and Chris Pacejo in providing their insight as professional developers.
