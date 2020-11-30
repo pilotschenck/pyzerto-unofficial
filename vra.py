@@ -52,8 +52,8 @@ class vra():
     """
     endPoint = '/vras'
     
-    def __init__(self, zvmurl, headerwithkey):
-       self.zvmurl = 'https://' + zvmurl + ':9669/v1'
+    def __init__(self, zvmip, headerwithkey):
+       self.zvmurl = 'https://' + zvmip + ':9669/v1'
        self.headerwithkey = headerwithkey 
        
     def infoAllVRAs(self):

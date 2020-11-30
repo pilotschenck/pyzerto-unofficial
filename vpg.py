@@ -6,8 +6,8 @@ import crudFunctions
 class vpgs():
     endPoint = '/vpgs'
 
-    def __init__(self, zvmurl, headerwithkey, vpgid=None):
-        self.zvmurl = 'https://' + zvmurl + ':9669/v1'
+    def __init__(self, zvmip, headerwithkey, vpgid=None):
+        self.zvmurl = 'https://' + zvmip + ':9669/v1'
         self.headerwithkey = headerwithkey
         self.vpgid = vpgid
 

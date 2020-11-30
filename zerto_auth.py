@@ -2,7 +2,7 @@ import requests, urllib3
 from requests.auth import HTTPBasicAuth
 import json
 import zvm, vpg, vra
-from secrets import zvm_ip, zvm_u, zvm_p, zca_u, zerto_license, zerto_tag
+#from secrets import zvm_ip, zvm_u, zvm_p, zca_u, zerto_license, zerto_tag
 import vmware.vapi.vsphere.client
 import time
 
@@ -28,7 +28,7 @@ def login(zvm_ip, zvm_user, zvm_password):
     else:
         print("HTTP %i - %s, Message %s" % (response.status_code, response.reason, response.text))
 
-
+'''
 def constructTagProtectedVpg(tagname):
 
     protectedTag = tagname
@@ -54,32 +54,37 @@ def constructTagProtectedVpg(tagname):
     payload2 = json.dumps(workingOpen)
     return payload2
     #return v.createNewVpgSettingsObject(payload2).json()
+'''
 
-
+'''
 terraformWf = open('terraformvariables.json')  # Grab ZCA specific information from 'terraform output -json'
 terraformVars = json.load(terraformWf)
 terraformWf.close()
 ipOfZca = terraformVars.get('SecondZCAprivateIPaddress').get('value')
 pwOfZca = terraformVars.get('ZCADecrypted_Password').get('value')
-
 '''
 
+'''
 wf = open('testVpg.json')
 payload = json.dumps(json.load(wf))
 '''
 
+'''
 wf2 = open('automatedVpgSkel.json')
 workingOpen = json.load(wf2)
 wf2.close()
+'''
 
-
+'''
 vCenterUUID = '0ad85e47-6b7d-4a95-a60d-be3d79308223'
 
 session = requests.session()
 session.verify = False
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 vsphere_client = vmware.vapi.vsphere.client.create_vsphere_client(server="192.168.1.41", username=zvm_u, password=zvm_p, session=session)
+'''
 
+'''
 testVraDict = {
                 "DatastoreIdentifier":"0ad85e47-6b7d-4a95-a60d-be3d79308223.datastore-10",
                 "HostIdentifier":"0ad85e47-6b7d-4a95-a60d-be3d79308223.host-9",
@@ -96,9 +101,14 @@ testVraDict = {
                     "VraIPConfigurationTypeApi":"Static"
                     }
                 }
+'''
 
+'''
 def multiPlatformDemo():
 
+    wf2 = open('automatedVpgSkel.json')
+    workingOpen = json.load(wf2)
+    wf2.close()
     vczvmSession = login(zvm_ip, zvm_u, zvm_p)
     awszcaSession = login(ipOfZca, zca_u, pwOfZca)
     z = zvm.zvm(zvm_ip, vczvmSession)
@@ -119,17 +129,4 @@ def multiPlatformDemo():
     tagYoureIt=v.createNewVpgSettingsObject(constructTagProtectedVpg(zerto_tag)).json()
     #tagYoureIt=json.loads(constructTagProtectedVpg(zerto_tag))
     v.commitSettingsObject(tagYoureIt)
-
-
-
-
-# v = vpg.vpgSettings(testUrl, testHeaders)
-# newVpg = v.createNewVpgSettingsObject(payload)
-# v.commitSettingsObject(newVpg)
-
-# TODO: Return entire header as opposed to just key
-
-# TODO: Securely pass credentials without storing in memory
-
-# TODO: Error handle 401, 403, etc.
-
+'''
