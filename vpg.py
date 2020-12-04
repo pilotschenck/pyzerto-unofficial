@@ -1,191 +1,600 @@
+"""
+The vpg.py module contains properly-formatted API calls for various Zerto VPG tasks, including 
+gathering VPG info such as checkpoints, as well as performing actions such as fail over test, 
+or fail over live. 
+"""
+
 import json
 import requests
 import crudFunctions
 
-
 class vpgs():
+    """
+    the vpgs class houses VPG specific methods. 
+    ...
+    Attributes
+    ----------
+    zvmip: str
+        the IP address of the target ZVM 
+    
+    headerwithkey : dict
+        a properly formatted dict containing the following key:value pairs:
+        {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            'x-zerto-session': str-type containing valid session key generated with zerto_auth.py
+        }
+
+    vpgid: str
+        unique identifier for individual VPG
+
+    body: dict
+
+    Methods
+    -------
+    getInfoAllVpgs()
+        Returns information for all VPGs
+    
+    getInfoSingleVPG(vpgid)
+        Returns information for individual VPG
+    
+    getCheckpointsForVPG(vpgid)
+        Returns all checkpoints for individual VPG
+
+    getCheckpointStatsForVpg(vpgid)
+        Returns earliest and latest checkpoint statistics for individual VPG
+
+    getValidValuesForVpgEntities()
+        Returns all valid values for VPG entity types
+
+    getValidValuesForFailoverCommitPolicies()
+        Returns all valid values for Failover commit polices
+
+    getValidValuesForFailoverShutdownPolicies()
+        Returns all valid values for Failover shutdown policies
+
+    getValidValuesForVpgPriorities()
+        Returns all valid values for VPG priorities
+
+    getValidValuesForFailoverRetentionPolicies()
+        Returns all valid values for Failover retention policies
+    
+    getValidValuesForVpgStatuses()
+        Returns all valid values for VPG statuses
+
+    getValidValuesForVpgSubstatuses()
+        Returns all valid values for VPG substatuses
+    
+    generatePeeringToken()
+        Generates site pairing token for pairing to ZVM / ZCA
+    
+    insertTaggedCheckpoint(vpgid, body)
+        Inserts tagged checkpoint for individual VPG
+
+    cloneVpg(vpgid, body)
+        Performs Clone operation for individual VPG
+    
+    cloneAbort(vpgid, body)
+        Aborts Clone operation for individual VPG
+
+    failoverVpg(vpgid, body)
+        Performs Failover operation for individual VPG
+
+    commitFailover(vpgid, body)
+        Performs commit of Failover operation for individual VPG
+    
+    rollbackFailover(vpgid, body)
+        Performs rollback of Failover operation for individual VPG
+    
+    failoverTest(vpgid, body)
+        Performs Failover Test operation for individual VPG
+
+    stopFailoverTest(vpgid, body)
+        Stops Failover Test operation for individual VPG
+
+    forceSyncVpg(vpgid, body)
+        Performs Force Sync operation for individual VPG
+
+    moveVpg(pgid, body)
+        Performs Move operation for individual VPG
+    
+    rollbackMoveVpg(vpgid, body)
+        Rollback Move operation for individual VPG
+    
+    commitMove(vpgid, body)
+        Performs a commit of Move operation for individual VPG
+
+    pauseVpgProtection(vpgid, body)
+        Pause VPG protection for individual VPG
+
+    resumeVpgProtection(vpgid, body)
+        Resume VPG protection for individual VPG
+
+    deleteVpg(vpgid, body)
+        Delete individual VPG 
+    """
     endPoint = '/vpgs'
 
     def __init__(self, zvmip, headerwithkey, vpgid=None):
+        """
+        Parameters
+        ----------
+        zvmip : str
+            The IP of the ZVM or ZCA
+        headerwithkey : dict
+            A properly formatted dict containing the following key:value pairs:
+                {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                    'x-zerto-session': str-type containing valid session key generated with zerto_auth.py
+                }
+        vpgid: str
+            unique identifier for individual VPG
+        """
+
         self.zvmurl = 'https://' + zvmip + ':9669/v1'
         self.headerwithkey = headerwithkey
         self.vpgid = vpgid
 
     def getInfoAllVpgs(self):
+        """
+        Returns information on all VPGs
+        
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
-        response = requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        return requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
 
     def getInfoSingleVpg(self, vpgid):
+        """
+        Returns information for individual VPG
+        
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want information returned on 
 
-        response = requests.get(self.zvmurl + self.endPoint + '/' + vpgid, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        Returns
+        -------
+        type requests.models.Response object
+        """
+
+        return requests.get(self.zvmurl + self.endPoint + '/' + vpgid, headers=self.headerwithkey, verify=False)
 
     def getCheckpointsForVpg(self, vpgid):
+        """
+        Returns all checkpoints for individual VPG
 
-        response = requests.get(self.zvmurl + self.endPoint + '/' + vpgid + '/checkpoints', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on 
 
+        Returns
+        -------
+        type requests.models.Response object
+        """
+
+        return requests.get(self.zvmurl + self.endPoint + '/' + vpgid + '/checkpoints', headers=self.headerwithkey, verify=False)
 
     def getCheckpointStatsForVpg(self, vpgid):
+        """
+        Returns earliest and latest checkpoint statistics for individual VPG
 
-        response = requests.get(self.zvmurl + self.endPoint + '/' + vpgid + '/checkpoints/stats', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on 
 
+        Returns
+        -------
+        type requests.models.Response object
+        """
+
+        return requests.get(self.zvmurl + self.endPoint + '/' + vpgid + '/checkpoints/stats', headers=self.headerwithkey, verify=False)
 
     def getValidValuesForVpgEntities(self):
+        """
+        Returns all valid values for VPG entity types
+        
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
-        response = requests.get(self.zvmurl + self.endPoint + '/entitytypes', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
-
-
+        return requests.get(self.zvmurl + self.endPoint + '/entitytypes', headers=self.headerwithkey, verify=False)
+    
     def getValidValuesForFailoverCommitPolicies(self):
+        """
+        Returns all valid values for Failover commit polices
+        
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
-        response = requests.get(self.zvmurl + self.endPoint + '/failovercommitpolicies', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
-
+        return requests.get(self.zvmurl + self.endPoint + '/failovercommitpolicies', headers=self.headerwithkey, verify=False)
+        
     def getValidValuesForFailoverShutdownPolicies(self):
+        """
+        Returns all valid values for Failover shutdown polices
+        
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
-        response = requests.get(self.zvmurl + self.endPoint + '/failovershutdownpolicies', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
-
+        return requests.get(self.zvmurl + self.endPoint + '/failovershutdownpolicies', headers=self.headerwithkey, verify=False)
+        
     def getValidValuesForVpgPriorities(self):
+        """
+        Returns all valid values for VPG priorities
+        
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
-        response = requests.get(self.zvmurl + self.endPoint + '/priorities', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        return requests.get(self.zvmurl + self.endPoint + '/priorities', headers=self.headerwithkey, verify=False)
 
     def getValidValuesForFailoverRetentionPolicies(self):
+        """
+        Returns all valid values for Failover Retention polices
+        
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
-        response = requests.get(self.zvmurl + self.endPoint + '/retentionpolicies', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        return requests.get(self.zvmurl + self.endPoint + '/retentionpolicies', headers=self.headerwithkey, verify=False)
 
     def getValidValuesForVpgStatuses(self):
+        """
+        Returns all valid values for VPG Statuses
+        
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
-        response = requests.get(self.zvmurl + self.endPoint + '/statuses', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
-
+        return requests.get(self.zvmurl + self.endPoint + '/statuses', headers=self.headerwithkey, verify=False)
+        
     def getValidValuesForVpgSubstatuses(self):
+        """
+        Returns all valid values for VPG Substatuses
+        
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
-        response = requests.get(self.zvmurl + self.endPoint + '/substatuses', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
-
+        return requests.get(self.zvmurl + self.endPoint + '/substatuses', headers=self.headerwithkey, verify=False)
+        
     def generatePeeringToken(self):
-        response = requests.post(self.zvmurl + self.endPoint + '/generatetoken', headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        """
+        Generates site pairing token for pairing to ZVM / ZCA
+        
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
+        return requests.post(self.zvmurl + self.endPoint + '/generatetoken', headers=self.headerwithkey, verify=False)
+        
     def insertTaggedCheckpoint(self, vpgid, body):
-        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/Checkpoints', body = body, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        """
+        Inserts tagged checkpoint for individual VPG
 
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on
+
+        body: dict, required
+            A properly formatted dict containing the following key:value pairs:
+                {  
+                    "checkpointName": "String content"
+                }
+        
+        Returns
+        -------
+        type requests.models.Response object
+        """
+
+        return requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/Checkpoints', body = body, headers=self.headerwithkey, verify=False)
+        
     def cloneVpg(self, vpgid, body):
-        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/CloneStart', body = body, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        """
+        Performs Clone operation for individual VPG
 
-    def cloneAbort(self, vpgid, body):
-        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/CloneAbort', body = body, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on
+
+        body: dict, required
+            A properly formatted dict containing the following key:value pairs:
+                {  
+                    "CheckpointId": "String content",
+                    "DatastoreIdentifier": "String content",
+                    "VmIdentifiers":
+                    [  
+                        VmIdentifier": "string content"
+                    ]
+                }
+        
+        Returns
+        -------
+        type requests.models.Response object
+        """
+
+        return requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/CloneStart', body = body, headers=self.headerwithkey, verify=False)
+        
+    def cloneAbort(self, vpgid):
+        """
+        Aborts Clone operation for individual VPG
+
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on 
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
+
+        return requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/CloneAbort', headers=self.headerwithkey, verify=False)
 
     def failoverVpg(self, vpgid, body):
-        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/Failover', body = body, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        """
+        Performs Failover operation for individual VPG
 
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on
+
+        body: dict, required
+            A properly formatted dict containing the following key:value pairs:
+            {  
+                "CheckpointIdentifier": "String content",
+                "CommitPolicy":1,
+                "ShutdownPolicy":0,
+                "TimeToWaitBeforeShutdownInSec":2147483647,
+                "IsReverseProtection": Boolean,
+                "VmIdentifiers":
+                [  
+                    VmIdentifier": "string content"
+                ]
+            }
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
+
+        return requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/Failover', body = body, headers=self.headerwithkey, verify=False)
+       
     def commitFailover(self, vpgid, body):
-        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/FailoverCommit', body = body, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        """
+        Commit Failover operation for individual VPG
 
-    def rollbackFailover(self, vpgid, body):
-        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/FailoverRollback', body = body, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on
+
+        body: dict, required
+        A properly formatted dict containing the following key:value pairs:
+            {  
+            "IsReverseProtection": Boolean
+            }
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
+
+        return requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/FailoverCommit', body = body, headers=self.headerwithkey, verify=False)
+        
+    def rollbackFailover(self, vpgid):
+        """
+        Rollback Failover operation for individual VPG
+
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on
+
+        Returns
+        -------
+        type requests.models.Response object
+        """        
+        return requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/FailoverRollback', headers=self.headerwithkey, verify=False)
+       
 
     def failoverTest(self, vpgid, body):
-        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/FailoverTest', body = body, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        """
+        Perform Failover Test operation for individual VPG
+
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on
+
+        body: dict, required
+        A properly formatted dict containing the following key:value pairs:
+            {  
+                "CheckpointIdentifier": "String content",
+                "VmIdentifiers":
+                    [  
+                        VmIdentifier": "string content"
+                    ]
+            }
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
+        return requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/FailoverTest', body = body, headers=self.headerwithkey, verify=False)
 
     def stopFailoverTest(self, vpgid, body):
-        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/FailoverTestStop', body = body, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        """
+        Stop Failover Test operation for individual VPG
 
-    def forceSyncVpg(self, vpgid, body):
-        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/forcesync', body = body, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on
+
+        body: dict, required
+        A properly formatted dict containing the following key:value pairs:
+            {  
+                "FailoverTestSuccess": Boolean,
+                "FailoverTestSummary": "String content"
+            }
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
+
+        return requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/FailoverTestStop', body = body, headers=self.headerwithkey, verify=False)
+        
+    def forceSyncVpg(self, vpgid):
+        """
+        Perform Force Sync operation for individual VPG
+
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on
+
+        Returns
+        -------
+        type requests.models.Response object
+        """           
+        return requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/forcesync', headers=self.headerwithkey, verify=False)
 
     def moveVpg(self, vpgid, body):
-        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/move', body = body, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        """
+        Perform Move operation for individual VPG
 
-    def rollbackMoveVpg(self, vpgid, body):
-        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/moveRollback', body = body, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on
+
+        body: dict, required
+        A properly formatted dict containing the following key:value pairs:
+        {  
+            "CommitPolicy": "String content",
+            "CommitPolicyTimeout": 2,
+            "ForceShutdown": Boolean,
+            "ReverseProtection": Boolean,
+            "KeepSourceVms": Boolean,
+            "ContinueOnPreScriptFailure": Boolean
+        }
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
+
+        return requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/move', body = body, headers=self.headerwithkey, verify=False)
+
+    def rollbackMoveVpg(self, vpgid):
+        """
+        Rollback Failover operation for individual VPG
+
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on
+
+        Returns
+        -------
+        type requests.models.Response object
+        """       
+
+        return requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/moveRollback', body = body, headers=self.headerwithkey, verify=False)
 
     def commitMove(self, vpgid, body):
-        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/moveCommit', body = body, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        """
+        Commit Move operation for individual VPG
 
-    def pauseVpgProtection(self, vpgid, body):
-        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/pause', body = body, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on
 
-    def resumeVpgProtection(self, vpgid, body):
-        response = requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/resume', body = body, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        body: dict, required
+        {  
+            "ReverseProtection": Boolean,
+            "KeepSourceVms": Boolean
+        }
+
+        Returns
+        -------
+        type requests.models.Response object
+        """        
+        return requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/moveCommit', body = body, headers=self.headerwithkey, verify=False)
+
+    def pauseVpgProtection(self, vpgid):
+        """
+        Pause protection for individual VPG
+
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
+
+        return requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/pause', headers=self.headerwithkey, verify=False)
+
+    def resumeVpgProtection(self, vpgid):
+        """
+        Resume protection for individual VPG
+
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
+
+        return requests.post(self.zvmurl + self.endPoint + '/' + vpgid + '/resume', headers=self.headerwithkey, verify=False)
 
     def deleteVpg(self, vpgid, body):
-        response = requests.delete(self.zvmurl + self.endPoint + '/' + vpgid, data=body, headers=self.headerwithkey, verify=False)
-        print(response.text)
-        print(response)
-        return response
+        """
+        Delete VPG for individual VPG
+
+        Parameters
+        ----------
+        vpgid : str, required
+            The VPG identifier that you want checkpoint information returned on
+
+        body: dict, required
+        {  
+            "Force": Boolean,
+            "KeepRecoveryVolumes": Boolean
+        }
+
+        Returns
+        -------
+        type requests.models.Response object
+        """           
+        return requests.delete(self.zvmurl + self.endPoint + '/' + vpgid, data=body, headers=self.headerwithkey, verify=False)
 
 class vpgSettings():
     endPoint = '/vpgSettings'
