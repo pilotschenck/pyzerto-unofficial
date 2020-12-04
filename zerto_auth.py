@@ -11,7 +11,7 @@ def login(zvm_ip, zvm_user, zvm_password):
     classes from other modules.
 
     The login function accepts three str-type inputs (IP addresss of ZVM/ZCA, username of ZVM/ZCA, and password of ZVM/
-    ZCA and returns a dict-type containing the valid headers for future API requests.
+    ZCA) and returns a dict-type containing the valid headers for future API requests.
     """
     sessionUrl = 'https://' + zvm_ip + ':9669/v1/session/add'
     print("Getting API token for " + zvm_ip + "...")
