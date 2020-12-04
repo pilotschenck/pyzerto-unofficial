@@ -193,48 +193,141 @@ class zvm:
                     'x-zerto-session': str-type containing valid session key generated with zerto_auth.py
                 }
         """
+
         self.zvmurl = 'https://' + zvmip + ':9669/v1'
         self.headerwithkey = headerwithkey
 
     def infoAllAlerts(self):
+        """
+        Returns information on all alerts
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
         return requests.get(self.zvmurl + '/alerts', headers=self.headerwithkey, verify=False)
 
     def infoSingleAlert(self, alertid):
+        """
+        Returns information on a single alert
+
+        Parameters
+        ----------
+        alertid : str, required
+            The alert identifier that you want information returned on
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
         return requests.get(self.zvmurl + '/alerts/' + str(alertid), headers=self.headerwithkey, verify=False)
 
     def validAlertEntitiesValues(self):
+        """
+        Returns information on valid alert entities
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
         return requests.get(self.zvmurl + '/alerts/entities', headers=self.headerwithkey, verify=False)
 
     def validAlertHelpIdentifiersValues(self):
+        """
+        Returns information on valid alert help identifiers
+
+        Returns
+        -------
+        type requests.models.Response object
+
+        """
 
         return requests.get(self.zvmurl + '/alerts/helpidentifiers', headers=self.headerwithkey, verify=False)
 
     def validAlertLevelValues(self):
+        """
+        Returns information on valid alert levels
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
         return requests.get(self.zvmurl + '/alerts/levels', headers=self.headerwithkey, verify=False)
 
     def dismissAlert(self, alertid):
+        """
+        Dismisses an active alert
+
+        Parameters
+        ----------
+        alertid : str, required
+            The specific alert that you want to dismiss
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
         return requests.post(self.zvmurl + '/alerts/levels' + str(alertid) + '/dismiss', headers=self.headerwithkey,
                              verify=False)
 
     def undismissAlert(self, alertid):
+        """
+        "Undismisses" (makes active) a previously-acknowledged/dismissed alert
+
+        Parameters
+        ----------
+        alertid : str, required
+            The specific alert that you want to undismiss
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
         return requests.post(self.zvmurl + '/alerts/levels' + str(alertid) + '/undismiss', headers=self.headerwithkey,
                              verify=False)
 
     def datastoreInfo(self):
+        """
+        Returns information on locally available datastores for use as a replication target.
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
         return requests.get(self.zvmurl + '/datastores', headers=self.headerwithkey, verify=False)
 
     def datastoreSingleInfo(self, datastoreid):
+        """
+        Returns information on a specific datastore locally available for use as a replication target.
+
+        Parameters
+        ----------
+        datastoreid : str, required
+            The specific datastore that you want information on.
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
         return requests.get(self.zvmurl + '/datastores/' + str(datastoreid), headers=self.headerwithkey, verify=False)
 
     def allEvents(self):
+        """
+        Returns information on all (recent) events stored by the ZVM.
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
+
         return requests.get(self.zvmurl + '/events', headers=self.headerwithkey, verify=False)
 
     # def filteredEvents(self):
@@ -242,27 +335,78 @@ class zvm:
         # TODO: Create filteredEvents function
 
     def getSingleEvent(self, eventid):
+        """
+        Returns information on a single event currently stored by the ZVM.
+
+        Parameters
+        ----------
+        eventid : str, required
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
         return requests.get(self.zvmurl + '/events/' + str(eventid), headers=self.headerwithkey, verify=False)
 
     def getValidEventCategories(self):
+        """
+        Returns all valid event categories.
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
         return requests.get(self.zvmurl + '/events/categories', headers=self.headerwithkey, verify=False)
 
     def getValidEventEntities(self):
+        """
+        Returns valid event entities.
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
         return requests.get(self.zvmurl + '/events/entities', headers=self.headerwithkey, verify=False)
 
     def getValidEventTypes(self):
+        """
+        Returns valid event types.
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
         return requests.get(self.zvmurl + '/events/types', headers=self.headerwithkey, verify=False)
 
     def addLicense(self, licensekey):
+        """
+        Accepts a str parameter containing a valid Zerto license key and applies it to the target ZVM or ZCA.
+
+        Parameters
+        ----------
+        licensekey : str
+            The license key you want to apply to the ZVM/ZCA.
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
         return requests.put(self.zvmurl + '/license', data=json.dumps({"LicenseKey": licensekey}),
                             headers=self.headerwithkey, verify=False)
 
     def delLicense(self):
+        """
+        Removes the license currently applied to the target ZVM or ZCA.
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
 
         return requests.delete(self.zvmurl + '/license', headers=self.headerwithkey, verify=False)
 
