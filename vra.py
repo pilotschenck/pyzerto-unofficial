@@ -1,40 +1,35 @@
+"""
+The vra.py module contains properly-formatted API calls for VRA related tasks. The
+tasks can include installing a vra, uninstalling a vra, editing a VRA, or upgrading
+a vra
+"""
+
 import json 
 import requests
 #from zerto_auth import testUrl, testHeaders
 class vra():
-    """The VRAs API returns information about VRAs, allows installation of a single VRA or VRA group,
-    uninstallation of a VRA, or editing of a VRA
+    """
+    The VRA class houses VRA specific methods
     ...
     Attributes
     ----------
     zvmurl : str
-        full path to the target Zerto Virtual Manager API endpoint, e.g. 'https://10.0.1.20:9669/v1'
+        the IP address of the target ZVM
+
     headerwithkey : dict
-        python dict object with the required REST headers, including a valid session key.
-    datastoreid : str
-        optional attribute specifying a specific datastoreID for the VRA disks. Default is None.
-    groupname: str
-        optional attribute specifying a group for VRA to be associated to. Default is None. 
-    hostid: str
-        optional attribute specifying host for VRA to run on. Default is None. 
-    hostrootpassword: str 
-        optional attribute if VRA leverages ESXi Host Root Password for ZVM communication. Default is None. 
-    ram: str
-        optional attribute specifying VRA ram configuration (min 1 GB - max 16 GB). Default is None. 
-    cpu: str
-        optional attribute specifying VRA cpu configuration (min 1 - max 4). Default is None. 
-    networkid: str
-        optional attribute specifing VRA network ID. Default is None.
-    publickey: str 
-        optional attribute specifying use of VMware VIB. Default is None.
-    gateway: str 
-        optional attribute specifying default gateway. Default is None. 
-    subnet: str
-        optional attribute specifying network subnet. Default is None. 
-    ipaddr: str 
-        optional attribute specifying stating ip address. Default is None. 
-    ipconfig: str 
-        optional attribute specifying (Static / DHCP) IP configuration. Default is None.  
+        a properly formatted dict containing the following key:value pairs:
+        {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            'x-zerto-session': str-type containing valid session key generated with zerto_auth.py
+        }
+    
+    vra_id: str 
+        unique identifier for individual VRA 
+
+    vra_dict: dict
+        dictionary object for VRA inputs 
+
     Methods
     -------
     infoAllVRAs()
@@ -48,42 +43,152 @@ class vra():
     editVRA()
         Edit individual VRA
     delVRA()
-        Delete individual VRA
+        Uninstall individual VRA
     """
     endPoint = '/vras'
     
     def __init__(self, zvmip, headerwithkey):
-       self.zvmurl = 'https://' + zvmip + ':9669/v1'
-       self.headerwithkey = headerwithkey 
+        """
+        Parameters
+        ----------
+        zvmip : str
+            The IP of the ZVM or ZCA
+        headerwithkey : dict
+            A properly formatted dict containing the following key:value pairs:
+                {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                    'x-zerto-session': str-type containing valid session key generated with zerto_auth.py
+                }
+        """
+
+        self.zvmurl = 'https://' + zvmip + ':9669/v1'
+        self.headerwithkey = headerwithkey 
        
     def infoAllVRAs(self):
-        response = requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
-        print(response)
-        return response
-       
-    def upgradeGroupVRAs(self):
-        response = requests.post(self.zvmurl + self.endPoint + "/upgrade", headers=self.headerwithkey, data=self.vraid, verify=False)
-        print(response)
-        return response
-    # TODO: Determine logic on how single VRA ID is passed vs multi VRA for upgrade  
+        """
+        Returns information on all VRAs
+        
+        Returns
+        -------
+        type requests.models.Response object
+        """        
+        return requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
+ 
+    def upgradeGroupVRAs(self, vra_id):
+        """
+                Upgrade a group of VRAs which are specified in the vra_id body
+
+        Parameters
+        ----------
+        vra_id: dict , required
+            A properly formatted dict containing the following key:value pairs:
+            {  
+                "VraIdentifiers":
+                [  
+                    "String content",
+                    "String content",
+                    ...
+                    "String content"
+                ]
+            }
+
+        Returns
+        -------
+        type requests.models.Response object
+        """    
+        return requests.post(self.zvmurl + self.endPoint + "/upgrade", headers=self.headerwithkey, data=vra_id, verify=False)
+  
     def upgradeVRA(self, vra_id):
-        response = requests.post(self.zvmurl + self.endPoint +"/" + vra_id + "/upgrade", headers=self.headerwithkey, verify=False)
-        print(response)
-        return response
+        """
+        Upgrade individual VRA
+        
+        Parameters
+        ----------
+        vra_id: str, required
+            the unique identifier for the vra requiring upgrade
+
+        Returns
+        -------
+        type requests.models.Response object
+        """        
+        return requests.post(self.zvmurl + self.endPoint +"/" + vra_id + "/upgrade", headers=self.headerwithkey, verify=False)
 
     def installVRA(self, vra_dict):
-        response = requests.post(self.zvmurl + self.endPoint, headers=self.headerwithkey, data=vra_dict, verify=False)
-        print(response)
-        return response
+        """
+        Performs installation of a VRA
 
-    def editVRA(self, vra_dict):
-        # TODO: convert this manual dict into something more scalable
-        response = requests.put(self.zvmurl + self.endPoint +"/" + self.vraid, headers=self.headerwithkey, data=vra_json, verify=False)
-        print(response)
+        Parameters
+        ----------
+        vra_dict: dict , required
+            A properly formatted dict containing the following key:value pairs:
+            {  
+                "DatastoreIdentifier": "String content",
+                "GroupName": "String content",
+                "HostIdentifier": "String content",
+                "HostRootPassword": "String content",
+                "MemoryInGb":2,
+                "NumOfCpus":1,
+                "NetworkIdentifier": "String content",
+                "UsePublicKeyInsteadOfCredentials": Boolean,
+                "PopulatePostInstallation": Boolean,
+                "VraNetworkDataApi": {  
+                    "DefaultGateway": "String content",
+                    "SubnetMask": "String content",
+                    "VraIPAddress": "String content",
+                    "VraIPConfigurationTypeApi": "String content"
+                }
+            }
+
+        Returns
+        -------
+        type requests.models.Response object
+        """ 
+        return requests.post(self.zvmurl + self.endPoint, headers=self.headerwithkey, data=vra_dict, verify=False)
+
+    def editVRA(self, vra_dict, vra_id):
+        """
+        Edit exiting VRA
+
+        Parameters
+        ----------
+        vra_dict: dict , required
+        {  
+            "GroupName": "String content",
+            "HostRootPassword": "String content",
+            "UsePublicKeyInsteadOfCredentials": Boolean,
+            "VraNetworkDataApi": {  
+                "DefaultGateway": "String content",
+                "SubnetMask": "String content",
+                "VraIPAddress": "String content",
+                "VraIPConfigurationTypeApi": "String content"
+            }
+        }
+
+        vra_id: str, required
+            the unique identifier for the vra requiring edit
+
+        Returns
+        -------
+        type requests.models.Response object
+        """         
+
+        return requests.put(self.zvmurl + self.endPoint +"/" + vra_id, headers=self.headerwithkey, data=vra_dict, verify=False)
     
-    def delVRA(self, vraid):
-        response = requests.delete(self.zvmurl + self.endPoint +"/" + vraid, headers=self.headerwithkey, verify=False)
-        print(response)
-        return response
+    def delVRA(self, vra_id):
+        """
+        Uninstall individual VRA
+        
+        Parameters
+        ----------
+        vra_id: str, required
+            the unique identifier for the vra requiring uninstall
+
+        Returns
+        -------
+        type requests.models.Response object
+        """   
+        return requests.delete(self.zvmurl + self.endPoint +"/" + vra_id, headers=self.headerwithkey, verify=False)
+
 
 
