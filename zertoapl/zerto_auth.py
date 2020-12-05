@@ -6,7 +6,7 @@ by the target Zerto Virtual Manager or Zerto Cloud Appliance.
 import requests
 from requests.auth import HTTPBasicAuth
 
-def login(zvm_ip, zvm_user, zvm_password):
+def login(zvm_ip, zvm_user, zvm_password, verbose=False):
     """The login function returns a valid header, including an API token, that can then be passed to newly instansiated
     classes from other modules.
 
@@ -14,7 +14,8 @@ def login(zvm_ip, zvm_user, zvm_password):
     ZCA) and returns a dict-type containing the valid headers for future API requests.
     """
     sessionUrl = 'https://' + zvm_ip + ':9669/v1/session/add'
-    print("Getting API token for " + zvm_ip + "...")
+    if verbose:
+        print("Getting API token for " + zvm_ip + "...")
     auth_info = "{\r\n\t\"AuthenticationMethod\":1\r\n}"
     headers = {
         'Accept': 'application/json',
@@ -25,10 +26,11 @@ def login(zvm_ip, zvm_user, zvm_password):
                                                                                                           zvm_password))
     if response.ok:
         auth_token = response.headers['x-zerto-session']
-        print("Api Token: " + auth_token)
         headers['x-zerto-session'] = auth_token
-        print(headers)
+        if verbose:
+            print("Api Token: " + auth_token)
+            print(headers)
         return headers
 
     else:
-        print("HTTP %i - %s, Message %s" % (response.status_code, response.reason, response.text))
+        raise Exception(f"HTTP: {response.status_code} - {response.reason}, Message: {response.text}")
