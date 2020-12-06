@@ -24,6 +24,15 @@ us if it messes something up!!
 
 ## Usage
 
+### Installation
+
+This package can be installed directly from PyPi or via git.
+
+```shell
+> pip install zertoapl
+> pip install git+https://github.com/pilotschenck/pyzerto-unofficial.git#master
+```
+
 ### The Zerto API, explained
 
 The Zerto Virtual Manager (or Zerto Cloud Appliance) acts as the management plane for all things Zerto-related in your
@@ -66,121 +75,146 @@ module as having to do with what's *inside* a VPG (with the exception of creatin
 
 ### Example: Adding a license
 
-    vczvmSession = login('10.0.10.50', 'zertoadmin@example.local', 'password')
-    z = zvm.zvm('10.0.10.50, vczvmSession)
-    z.addLicense('VALIDZERTOLICENSEKEYHERE')
+```python
+from zertoapl.zerto import zvm
+from zertoapl.zerto_auth import login
+
+vczvmSession = login('10.0.10.50', 'zertoadmin@example.local', 'password')
+z = zvm('10.0.10.50, vczvmSession')
+z.addLicense('VALIDZERTOLICENSEKEYHERE')
+```
     
 ### Example: Installing a VRA
 
-    import json
-    vczvmSession = login('10.0.10.50', 'zertoadmin@example.local', 'password')
-    v = vra.vra('10.0.10.50', vczvmSession)
-    testVraDict = {
-                "DatastoreIdentifier":"GUID-OF-VCENTER.DATASTOREMOREF",
-                "HostIdentifier":"GUID-OF-VCENTER.HOSTMOREF",
-                "HostRootPassword":"ESXIPASSWORD,
-                "MemoryInGb":3,
-                "NumOfCpus":1,
-                "NetworkIdentifier":"GUID-OF-VCENTER.NETWORKMOREF",
-                "UsePublicKeyInsteadOfCredentials":False,
-                "PopulatePostInstallation":False,
-                "VraNetworkDataApi":{
-                    "DefaultGateway":"192.168.1.1",
-                    "SubnetMask":"255.255.255.0",
-                    "VraIPAddress":"192.168.1.90",
-                    "VraIPConfigurationTypeApi":"Static"
-                    }
+```python
+import json
+from zertoapl.vra import vra
+from zertoapl.zerto_auth import login
+
+vczvmSession = login('10.0.10.50', 'zertoadmin@example.local', 'password')
+v = vra('10.0.10.50', vczvmSession)
+testVra = json.dumps({
+            "DatastoreIdentifier": "GUID-OF-VCENTER.DATASTOREMOREF",
+            "HostIdentifier": "GUID-OF-VCENTER.HOSTMOREF",
+            "HostRootPassword": "ESXIPASSWORD",
+            "MemoryInGb": 3,
+            "NumOfCpus": 1,
+            "NetworkIdentifier": "GUID-OF-VCENTER.NETWORKMOREF",
+            "UsePublicKeyInsteadOfCredentials": False,
+            "PopulatePostInstallation": False,
+            "VraNetworkDataApi": {
+                "DefaultGateway": "192.168.1.1",
+                "SubnetMask": "255.255.255.0",
+                "VraIPAddress": "192.168.1.90",
+                "VraIPConfigurationTypeApi": "Static"
                 }
-                
-    v.installVRA(json.dumps(testVraDict))
+            })
+            
+v.installVRA(testVra)
+```
 
 ### Example: Pairing a site with another site
-    import json, requests
-    vczvmSession = login('10.0.10.50', 'zertoadmin@example.local', 'password')
-    awszcaSession = login('172.16.20.21', 'Administrator', 'password')
-    zvmOnsite = zvm.zvm('10.0.10.50', vczvmSession)
-    zcaInCloud = zvm.zvm('172.16.20.21', awszcaSession)
-    zcaTokenObject = zcaInCloud.generatePeeringToken()
-    zcaTokenActual = zcaTokenObject.json().get('Token')
-    pairOutput = requests.post('https://10.0.10.50:9669/v1/peersites', headers=vczvmSession, data=json.dumps(
-                                {"HostName": '172.16.20.21', "Port":"9071", "Token":zcaTokenActual}), verify=False)
+    
+```python
+import json, requests
+from zertoapl.zerto_auth import login
+from zertoapl.zvm import zvm
 
+vczvmSession = login('10.0.10.50', 'zertoadmin@example.local', 'password')
+awszcaSession = login('172.16.20.21', 'Administrator', 'password')
+zvmOnsite = zvm('10.0.10.50', vczvmSession)
+zcaInCloud = zvm('172.16.20.21', awszcaSession)
+zcaTokenObject = zcaInCloud.generatePeeringToken()
+zcaTokenActual = zcaTokenObject.json().get('Token')
+pairOutput = requests.post('https://10.0.10.50:9669/v1/peersites',
+                           headers=vczvmSession,
+                           data=json.dumps({"HostName": '172.16.20.21', 
+                                            "Port":"9071",
+                                            "Token":zcaTokenActual}),
+                           verify=False)
+```
 ### Example: Create a VPG
 
-    import json
-    vczvmSession = login('10.0.10.50', 'zertoadmin@example.local', 'password')
-    v = vpg.vpgSettings(zvm_ip, vczvmSession)
-    vpgPayload = {
-        "Basic":{
-            "JournalHistoryInHours":2,
-            "Name":"TestVpg",
-            "Priority":"Medium",
-            "ProtectedSiteIdentifier":"IDENTIFIER1",
-            "RecoverySiteIdentifier":"IDENTIFIER2",
-            "RpoInSeconds":600,
-            "ServiceProfileIdentifier": null,
-            "TestIntervalInMinutes":0,
-            "UseWanCompression":"True",
-            "ZorgIdentifier": null
-        },
-        "BootGroups":{
-            "BootGroups":[
-                {
-                    "BootDelayInSeconds":0,
-                    "BootGroupIdentifier":"00000000-0000-0000-0000-000000000000",
-                    "Name":"Default"
-                }
-            ]
-        },
-        "Journal":{
-            "DatastoreIdentifier":"GUIDOFVCENTER.DATASTOREMOREF",
-            "Limitation":{
-                "HardLimitInMB":0,
-                "HardLimitInPercent":0,
-                "WarningThresholdInMB":0,
-                "WarningThresholdInPercent":0
+```python
+import json
+from zertoapl.zerto_auth import login
+from zertoapl.vpg import vpgSettings
+
+vczvmSession = login('10.0.10.50', 'zertoadmin@example.local', 'password')
+v = vpgSettings(zvm_ip, vczvmSession)
+
+vpgPayload = json.dumps({
+    "Basic": {
+        "JournalHistoryInHours": 2,
+        "Name": "TestVpg",
+        "Priority": "Medium",
+        "ProtectedSiteIdentifier": "IDENTIFIER1",
+        "RecoverySiteIdentifier": "IDENTIFIER2",
+        "RpoInSeconds": 600,
+        "ServiceProfileIdentifier":  null,
+        "TestIntervalInMinutes": 0,
+        "UseWanCompression": "True",
+        "ZorgIdentifier": null
+    },
+    "BootGroups": {
+        "BootGroups": [
+            {
+                "BootDelayInSeconds": 0,
+                "BootGroupIdentifier": "00000000-0000-0000-0000-000000000000",
+                "Name": "Default"
+            }
+        ]
+    },
+    "Journal": {
+        "DatastoreIdentifier": "GUIDOFVCENTER.DATASTOREMOREF",
+        "Limitation": {
+            "HardLimitInMB": 0,
+            "HardLimitInPercent": 0,
+            "WarningThresholdInMB": 0,
+            "WarningThresholdInPercent": 0
+        }
+    },
+    "LongTermRetention": null,
+
+    "Networks": {
+        "Failover": {
+            "Hypervisor": {
+                "DefaultNetworkIdentifier": "GUIDOFVCENTER.NETWORKMOREF"
             }
         },
-        "LongTermRetention":null,
+        "FailoverTest": {
+            "Hypervisor": {
+                "DefaultNetworkIdentifier": "GUIDOFVCENTER.NETWORKMOREF"
+            }
+        }
+    },
+    "Recovery": {
+        "DefaultDatastoreClusterIdentifier": null,
+        "DefaultDatastoreIdentifier": "GUIDOFVCENTER.DATASTOREMOREF",
+        "DefaultFolderIdentifier": "GUIDOFVCENTER.FOLDERMOREF",
+        "DefaultHostClusterIdentifier": null,
+        "DefaultHostIdentifier": "GUIDOFVCENTER.HOSTMOREF",
+        "ResourcePoolIdentifier": null
+    },
+    "Scripting": {
+        "PostRecovery": {
+            "Command": null,
+            "Parameters": null,
+            "TimeoutInSeconds": 0
+        },
+        "PreRecovery": {
+            "Command": null,
+            "Parameters": null,
+            "TimeoutInSeconds": 0
+        }
+    },
+    "Vms": []
+})
     
-        "Networks":{
-            "Failover":{
-                "Hypervisor":{
-                    "DefaultNetworkIdentifier":"GUIDOFVCENTER.NETWORKMOREF"
-                }
-            },
-            "FailoverTest":{
-                "Hypervisor":{
-                    "DefaultNetworkIdentifier":"GUIDOFVCENTER.NETWORKMOREF"
-                }
-            }
-        },
-        "Recovery":{
-            "DefaultDatastoreClusterIdentifier":null,
-            "DefaultDatastoreIdentifier":"GUIDOFVCENTER.DATASTOREMOREF",
-            "DefaultFolderIdentifier":"GUIDOFVCENTER.FOLDERMOREF",
-            "DefaultHostClusterIdentifier":null,
-            "DefaultHostIdentifier":"GUIDOFVCENTER.HOSTMOREF",
-            "ResourcePoolIdentifier":null
-        },
-        "Scripting":{
-            "PostRecovery":{
-                "Command":null,
-                "Parameters":null,
-                "TimeoutInSeconds":0
-            },
-            "PreRecovery":{
-                "Command":null,
-                "Parameters":null,
-                "TimeoutInSeconds":0
-            }
-        },
-        "Vms":[]
-    }
-        
-    vpgSettingsId = v.createNewVpgSettingsObject(json.dumps(vpgPayload))
-    v.commitSettingsObject(vpgSettingsId)
-        
+vpgSettingsId = v.createNewVpgSettingsObject(vpgPayload)
+v.commitSettingsObject(vpgSettingsId)
+```
+
 ## Acknowledgements
 
 I would like to acknowledge several people for assisting, either directly or indirectly, in the creation of this
