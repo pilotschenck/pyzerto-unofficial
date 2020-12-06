@@ -1,5 +1,5 @@
 # pyzerto-unofficial
-![Zerto Automation API Library Logo!](https://github.com/pilotschenck/pyzerto-unofficial/blob/main/zertoautomationapilibrary-logo.png?raw=true)
+![Zerto Automation API Library Logo!](docs/zertoautomationapilibrary-logo.png)
 
 ## Overview
 
