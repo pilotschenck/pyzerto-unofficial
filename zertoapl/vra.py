@@ -191,10 +191,9 @@ class vra():
         return requests.delete(self.zvmurl + self.endPoint +"/" + vra_id, headers=self.headerwithkey, verify=False)
 
 
+class vraObject():
 
-    class vraObject():
-
-    def __init__(self, zvmip, headerwithkey, datastorename, hostname, networkname, cpu, ram, ip, subnet, gateway, hostpass=False, pubKey=True):
+    def __init__(self, zvmip, headerwithkey, datastorename=None, hostname=None, networkname=None, cpu=None, ram=None, ip=None, subnet=None, gateway=None, hostpass=False, pubKey=True):
         """
         Parameters
         ----------
@@ -224,3 +223,8 @@ class vra():
         self.gateway = gateway 
         self.usehostpass = hostpass
         self.usepubkey = pubKey
+
+    #TODO: Method for calling VRA Install 
+    #TODO: Method for deleting VRA  
+    #TODO: Method for upgrading VRA / vra group 
+    #TODO: Method for edit VRA    
