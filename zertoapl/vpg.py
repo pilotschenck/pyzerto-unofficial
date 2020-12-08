@@ -61,9 +61,6 @@ class vpgs():
     getValidValuesForVpgSubstatuses()
         Returns all valid values for VPG substatuses
     
-    generatePeeringToken()
-        Generates site pairing token for pairing to ZVM / ZCA
-    
     insertTaggedCheckpoint(vpgid, body)
         Inserts tagged checkpoint for individual VPG
 
@@ -267,17 +264,6 @@ class vpgs():
         """
 
         return requests.get(self.zvmip + self.endPoint + '/substatuses', headers=self.headerwithkey, verify=False)
-        
-    def generatePeeringToken(self):
-        """
-        Generates site pairing token for pairing to ZVM / ZCA
-        
-        Returns
-        -------
-        type requests.models.Response object
-        """
-
-        return requests.post(self.zvmip + self.endPoint + '/generatetoken', headers=self.headerwithkey, verify=False)
         
     def insertTaggedCheckpoint(self, vpgid, body):
         """
