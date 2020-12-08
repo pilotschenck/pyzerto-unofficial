@@ -192,3 +192,35 @@ class vra():
 
 
 
+    class vraObject():
+
+    def __init__(self, zvmip, headerwithkey, datastorename, hostname, networkname, cpu, ram, ip, subnet, gateway, hostpass=False, pubKey=True):
+        """
+        Parameters
+        ----------
+        zvmip : str
+            The IP of the ZVM or ZCA
+        headerwithkey : dict
+            A properly formatted dict containing the following key:value pairs:
+                {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                    'x-zerto-session': str-type containing valid session key generated with zerto_auth.py
+                }
+        """
+
+        self.zvmurl = 'https://' + zvmip + ':9669/v1'
+        self.headerwithkey = headerwithkey 
+        self.datastore = datastorename
+        #TODO:self.datastore_guid = 
+        self.host = hostname
+        #TODO: selfhost_guid = 
+        self.network = networkname
+        #TODO: self.network_guid = 
+        self.cpu = cpu 
+        self.ram = ram 
+        self.ip = ip 
+        self.subnet = subnet
+        self.gateway = gateway 
+        self.usehostpass = hostpass
+        self.usepubkey = pubKey
