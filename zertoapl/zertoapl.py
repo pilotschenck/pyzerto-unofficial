@@ -30,7 +30,7 @@ class zertoapl:
 
 #z = zertoapl(sys.argv[1], sys.argv[2], sys.argv[3])
 
-print(z.zvm().getLicense().json())
-print(z.vra().infoAllVRAs().json())
-print(z.vpgs().getInfoAllVpgs().json())
+#print(z.zvm().getLicense().json())
+#print(z.vra().infoAllVRAs().json())
+#print(z.vpgs().getInfoAllVpgs().json())
 #print(z.vpgsettings().getSettingsForSingleVpg().json())
