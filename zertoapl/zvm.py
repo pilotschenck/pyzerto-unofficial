@@ -84,6 +84,9 @@ class zvm:
 
     getLocalSiteInfo()
         Returns local site information.
+    
+    getLocalSiteGuid()
+        Returns local site guid
 
     getValidPairingStatus()
         Returns information on the pairing status of the target ZVM or ZCA to other sites (ie other ZVMs or ZCAs).
@@ -196,6 +199,7 @@ class zvm:
 
         self.zvmurl = 'https://' + zvmip + ':9669/v1'
         self.headerwithkey = headerwithkey
+        
 
     def infoAllAlerts(self):
         """
@@ -319,6 +323,39 @@ class zvm:
 
         return requests.get(self.zvmurl + '/datastores/' + str(datastoreid), headers=self.headerwithkey, verify=False)
 
+    def getDatastoreNames(self):
+        """
+        Returns a list of all datastores visible to ZVM 
+        
+        Returns
+        -------
+        type requests.models.Response object
+        """
+
+        return requests.get(self.zvmurl + '/datastores', headers=self.headerwithkey, verify=False)
+ 
+
+    def getDatastoreGuid(self, datastorename): 
+        """
+        Returns guid on a specific datastore
+
+        Parameters
+        ----------
+        datastorename : str, required
+            The specific datastore that you want a GUID for.
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
+        output = requests.get(self.zvmurl + '/datastores', headers=self.headerwithkey, verify=False).json()
+        for datastore in output: 
+            if datastore['DatastoreName'] == datastorename:
+                return datastore['DatastoreIdentifier']
+                
+        else: 
+            pass
+
     def allEvents(self):
         """
         Returns information on all (recent) events stored by the ZVM.
@@ -431,7 +468,18 @@ class zvm:
         """
 
         return requests.get(self.zvmurl + '/localsite', headers=self.headerwithkey, verify=False)
+    
+    def getLocalSiteGuid(self):
+        """
+        Returns local site GUID information.
 
+        Returns
+        -------
+        type str
+        """ 
+
+        output = requests.get(self.zvmurl + '/localsite', headers=self.headerwithkey, verify=False)
+        return output.json()['SiteIdentifier']
     def getValidPairingStatus(self):
         """
         Returns information on the pairing status of the target ZVM or ZCA to other sites (ie other ZVMs or ZCAs).
@@ -734,6 +782,28 @@ class zvm:
 
         return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/hosts',
                             headers=self.headerwithkey, verify=False)
+
+    def getHostGuid(self, hostname): 
+        """
+        Returns guid on a specific host
+
+        Parameters
+        ----------
+        hostname : str, required
+            The specific host that you want a GUID for.
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
+        output = zvm(self.zvmip, self.headerwithkey).getHostsAtSite('dd0ed885-2e55-418d-8eef-9348ba2c7c66')
+        
+        #output = requests.get(self.zvmurl + '/hosts', headers=self.headerwithkey, verify=False).json()
+        for host in output: 
+            if host['VirtualizationHostName'] == hostname:
+                return host['HostIdentifier']  
+        else: 
+            pass
 
     def getSingleHostAtSite(self, siteidentifier, hostidentifier):
         """

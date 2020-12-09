@@ -72,8 +72,9 @@ class vra():
         Returns
         -------
         type requests.models.Response object
-        """        
-        return requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False)
+        """
+             
+        return requests.get(self.zvmurl + self.endPoint, headers=self.headerwithkey, verify=False, timeout=10)
  
     def upgradeGroupVRAs(self, vra_id):
         """
@@ -97,7 +98,7 @@ class vra():
         -------
         type requests.models.Response object
         """    
-        return requests.post(self.zvmurl + self.endPoint + "/upgrade", headers=self.headerwithkey, data=vra_id, verify=False)
+        return requests.post(self.zvmurl + self.endPoint + "/upgrade", headers=self.headerwithkey, data=vra_id, verify=False, timeout=10)
   
     def upgradeVRA(self, vra_id):
         """
@@ -112,7 +113,7 @@ class vra():
         -------
         type requests.models.Response object
         """        
-        return requests.post(self.zvmurl + self.endPoint +"/" + vra_id + "/upgrade", headers=self.headerwithkey, verify=False)
+        return requests.post(self.zvmurl + self.endPoint +"/" + vra_id + "/upgrade", headers=self.headerwithkey, verify=False, timeout=10)
 
     def installVRA(self, vra_dict):
         """
@@ -144,7 +145,7 @@ class vra():
         -------
         type requests.models.Response object
         """ 
-        return requests.post(self.zvmurl + self.endPoint, headers=self.headerwithkey, data=vra_dict, verify=False)
+        return requests.post(self.zvmurl + self.endPoint, headers=self.headerwithkey, data=vra_dict, verify=False, timeout=10)
 
     def editVRA(self, vra_dict, vra_id):
         """
@@ -173,7 +174,7 @@ class vra():
         type requests.models.Response object
         """         
 
-        return requests.put(self.zvmurl + self.endPoint +"/" + vra_id, headers=self.headerwithkey, data=vra_dict, verify=False)
+        return requests.put(self.zvmurl + self.endPoint +"/" + vra_id, headers=self.headerwithkey, data=vra_dict, verify=False, timeout=10)
     
     def delVRA(self, vra_id):
         """
@@ -188,7 +189,7 @@ class vra():
         -------
         type requests.models.Response object
         """   
-        return requests.delete(self.zvmurl + self.endPoint +"/" + vra_id, headers=self.headerwithkey, verify=False)
+        return requests.delete(self.zvmurl + self.endPoint +"/" + vra_id, headers=self.headerwithkey, verify=False, timeout=10)
 
 
 class vraObject():

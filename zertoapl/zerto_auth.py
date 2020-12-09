@@ -22,8 +22,8 @@ def login(zvm_ip, zvm_user, zvm_password, verbose=False):
         'Content-Type': 'application/json'
         }
 
-    response = requests.post(sessionUrl, headers=headers, data=auth_info, verify=False, auth=HTTPBasicAuth(zvm_user,
-                                                                                                          zvm_password))
+    response = requests.post(sessionUrl, headers=headers, data=auth_info, verify=False, timeout=10, auth=HTTPBasicAuth(zvm_user,
+                                                                                                                    zvm_password))
     if response.ok:
         auth_token = response.headers['x-zerto-session']
         headers['x-zerto-session'] = auth_token
