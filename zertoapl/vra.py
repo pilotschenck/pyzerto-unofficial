@@ -7,6 +7,7 @@ a vra
 import json 
 import requests
 #from zerto_auth import testUrl, testHeaders
+
 class vra():
     """
     The VRA class houses VRA specific methods
@@ -129,10 +130,8 @@ class vra():
                 "HostIdentifier": "String content",
                 "HostRootPassword": "String content",
                 "MemoryInGb":2,
-                "NumOfCpus":1,
                 "NetworkIdentifier": "String content",
                 "UsePublicKeyInsteadOfCredentials": Boolean,
-                "PopulatePostInstallation": Boolean,
                 "VraNetworkDataApi": {  
                     "DefaultGateway": "String content",
                     "SubnetMask": "String content",
@@ -194,7 +193,7 @@ class vra():
 
 class vraObject():
 
-    def __init__(self, zvmip, headerwithkey, datastorename=None, hostname=None, networkname=None, cpu=None, ram=None, ip=None, subnet=None, gateway=None, hostpass=False, pubKey=True):
+    def __init__(self, zvmip, headerwithkey, datastorename=None, hostname=None, networkname=None, ram=None, ip=None, subnet=None, gateway=None, hostpass=False, pubKey=True):
         """
         Parameters
         ----------
@@ -212,11 +211,8 @@ class vraObject():
         self.zvmurl = 'https://' + zvmip + ':9669/v1'
         self.headerwithkey = headerwithkey 
         self.datastore = datastorename
-        #TODO:self.datastore_guid = 
         self.host = hostname
-        #TODO: selfhost_guid = 
         self.network = networkname
-        #TODO: self.network_guid = 
         self.cpu = cpu 
         self.ram = ram 
         self.ip = ip 

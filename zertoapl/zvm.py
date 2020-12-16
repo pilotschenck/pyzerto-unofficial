@@ -156,6 +156,9 @@ class zvm:
 
     getNetworksAtSite(siteidentifier)
         Returns information about all networks at the specified site.
+    
+    getNetworkGuid(network_name)
+        Returns guid for specific virtual network.
 
     getRepositoriesAtSite(siteidentifier)
         Returns information about all LTR repositories at the specified site.
@@ -796,9 +799,9 @@ class zvm:
         -------
         type requests.models.Response object
         """
-        output = zvm(self.zvmip, self.headerwithkey).getHostsAtSite('dd0ed885-2e55-418d-8eef-9348ba2c7c66')
+        site_guid = self.getLocalSiteGuid()
+        output = self.getHostsAtSite(site_guid).json()
         
-        #output = requests.get(self.zvmurl + '/hosts', headers=self.headerwithkey, verify=False).json()
         for host in output: 
             if host['VirtualizationHostName'] == hostname:
                 return host['HostIdentifier']  
@@ -841,6 +844,29 @@ class zvm:
 
         return requests.get(self.zvmurl + '/virtualizationsites/' + siteidentifier + '/networks',
                             headers=self.headerwithkey, verify=False)
+
+    def getNetworkGuid(self, networkname):
+        """
+        Returns GUID for specific virtual network.
+
+        Parameters
+        ----------
+        network_name : str, required
+            the specific network that you want GUID for.
+
+        Returns
+        -------
+        type requests.models.Response object
+        """
+
+        site_guid = self.getLocalSiteGuid()
+        output = self.getNetworksAtSite(site_guid).json()
+
+        for network in output: 
+            if network['VirtualizationNetworkName'] == networkname:
+                return network['NetworkIdentifier']
+            else:
+                pass
 
     def getRepositoriesAtSite(self, siteidentifier):
         """
